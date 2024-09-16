@@ -1,0 +1,3 @@
+.env
+src/deprecated/
+__pycache__/
