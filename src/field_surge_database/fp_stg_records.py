@@ -68,7 +68,10 @@ def records_to_stg(table_name: str, api_data: json):
                 remote_updated_at: datetime = date_normalization(data=data, data_key='updated_at')
                 remote_deleted_at: datetime = date_normalization(data=data, data_key='deleted_at')
                 raw_json: json = json.dumps(data)
-                historical_id: int = set_historical_id(data=data, data_key='historical_id')
+                if table_name == 'payments':
+                    historical_id: int = set_historical_id(data=data, data_key='invoice', child_key='import_id')
+                else:
+                    historical_id: int = set_historical_id(data=data, data_key='import_id')
                 local_record: object = try_session(session_type='get', session_object=Records, record_id=remote_id)
 
                 if local_record != None:
@@ -108,15 +111,19 @@ def records_to_stg(table_name: str, api_data: json):
 
     return Records
     
-def set_historical_id(data: object, data_key: str):
+def set_historical_id(data: object, data_key: str, **kwargs):
     """
     Checks if the data object has a data key, in which case, returns that data key, otherwise returns None
 
     :param (object) data: The data object which you're iterating through
     :param (string) data_key: The key of the data object which you're trying to return
+    :param (string) child_key: **kwargs The child key of the data_key
     """
     if data_key in data: 
-        return data[data_key] 
+        if kwargs['child_key']:
+            return data[data_key][kwargs['child_key']]
+        else:
+            return data[data_key]
     else: 
         return None
                 
