@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Integer, update
+from sqlalchemy import DateTime, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from .connect import FieldSurgeDatabase
