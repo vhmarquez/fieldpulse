@@ -1,16 +1,15 @@
 from datetime import datetime
-from dateutil import parser
 import json
 from typing import Optional
 
 from sqlalchemy import DateTime, String, Integer, update
-from sqlalchemy.orm import Mapped, mapped_column, declarative_base, sessionmaker
+from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from .connect import FieldSurgeDatabase
+from .utilities import try_session, date_normalization
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()
-Session = sessionmaker(bind=db)
 
 def records_to_stg(table_name: str, api_data: json):
     """
@@ -103,68 +102,6 @@ def records_to_stg(table_name: str, api_data: json):
             )
 
     return Records
-
-def try_session(session_type: str, session_object: object, **kwargs):
-    """
-    Attempts to create a session, commits the session if successful, or rollsback
-
-    :param (string) session_type: Accepts, 'get', 'add', 'execute', or 'delete'
-    :param (object) session_object: The object to pass to the session
-    :param (string) record_id: **kwargs, the record id that you're trying to fetch, used with session type 'get'
-    :param (string) session_list: **kwargs, the list of records that you're trying to update, used with session type 'execute'
-    """
-    with Session() as session:
-        try:
-            if session_type == 'get':
-                retrieved_record = session.get(session_object, kwargs['record_id'])
-                
-                if retrieved_record != None:
-                    return retrieved_record
-                else:
-                    return None
-            
-            if session_type == 'add':
-                session.add(session_object)
-                session.commit()
-                record_id: str = str(session_object.remote_id)
-                print(f'Record: {record_id} created')
-
-            if session_type == 'execute':
-                session.execute(
-                    update(session_object), 
-                    kwargs['session_list']
-                )
-                session.commit()
-                
-                for list_item in kwargs['session_list']:
-                    list_item_id: str = str(list_item['id'])
-                    print(f'Record: {list_item_id} was updated')
-
-            if session_type == 'delete':
-                session.query(session_object).delete()
-                session.commit()
-                table_name: str = str(session_object().__tablename__)
-                print(f'Table: {table_name} deleted')
-
-        except Exception:
-            session.rollback()
-            print(f'{session_type} session, failed.')
-            print(session_object, kwargs)
-
-        finally:
-            session.close()
-
-def date_normalization(data: object, data_key: str):
-    """
-    Normalizes dates
-
-    :param (object) data: The data object which you're iterating through
-    :param (string) data_key: The key of the data object which you're trying to normalize
-    """
-    if data[data_key] != None:
-        return parser.parse(str(data[data_key])).strftime('%Y-%m-%d %H:%M:%S')
-    else:
-        return None
     
 def set_historical_id(data: object, data_key: str):
     """
