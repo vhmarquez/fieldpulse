@@ -1,7 +1,7 @@
 from sqlalchemy import update
 from sqlalchemy.orm import sessionmaker
 
-from ..connect import FieldSurgeDatabase
+from field_surge_database.connect import FieldSurgeDatabase
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Session = sessionmaker(bind=db)
@@ -10,7 +10,7 @@ def try_session(session_type: str, session_object: object, **kwargs):
     """
     Attempts to create a session, commits the session if successful, or rollsback
 
-    :param (string) session_type: Accepts, 'get', 'add', 'execute', or 'delete'
+    :param (string) session_type: Accepts, 'get', 'get_all ,'add', 'execute', or 'delete'
     :param (object) session_object: The object to pass to the session
     :param (string) record_id: **kwargs, the record id that you're trying to fetch, used with session type 'get'
     :param (string) session_list: **kwargs, the list of records that you're trying to update, used with session type 'execute'
@@ -22,6 +22,14 @@ def try_session(session_type: str, session_object: object, **kwargs):
                 
                 if retrieved_record != None:
                     return retrieved_record
+                else:
+                    return None
+            
+            if session_type == 'get_all':
+                retrieved_records = session.query(session_object).all()
+
+                if retrieved_records != None:
+                    return retrieved_records
                 else:
                     return None
             

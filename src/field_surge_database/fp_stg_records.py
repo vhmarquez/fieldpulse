@@ -5,8 +5,8 @@ from typing import Optional
 from sqlalchemy import DateTime, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
-from .connect import FieldSurgeDatabase
-from .utilities import try_session, date_normalization
+from field_surge_database.connect import FieldSurgeDatabase
+from field_surge_database.utilities import try_session, date_normalization
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()
@@ -51,6 +51,11 @@ def records_to_stg(table_name: str, api_data: json):
                 session_object=Records
             )
 
+        def get_all_records() -> object:
+            Base.metadata.create_all(db)
+
+            return try_session(session_type='get_all', session_object=Records)
+
 
         def upsert(data: json = api_data) -> None:
             Base.metadata.create_all(db)
@@ -62,7 +67,7 @@ def records_to_stg(table_name: str, api_data: json):
                 remote_created_at: datetime = date_normalization(data=data, data_key='created_at')
                 remote_updated_at: datetime = date_normalization(data=data, data_key='updated_at')
                 remote_deleted_at: datetime = date_normalization(data=data, data_key='deleted_at')
-                raw_json: str = str(data)
+                raw_json: json = json.dumps(data)
                 historical_id: int = set_historical_id(data=data, data_key='historical_id')
                 local_record: object = try_session(session_type='get', session_object=Records, record_id=remote_id)
 
@@ -75,7 +80,7 @@ def records_to_stg(table_name: str, api_data: json):
                             "remote_created_at": remote_created_at, 
                             "remote_updated_at": remote_updated_at, 
                             "remote_deleted_at": remote_deleted_at, 
-                            "raw_json": str(raw_json), 
+                            "raw_json": raw_json, 
                             "historical_id": historical_id, 
                             "local_update_at": local_updated_at
                         })
@@ -88,7 +93,7 @@ def records_to_stg(table_name: str, api_data: json):
                             remote_created_at = remote_created_at,
                             remote_updated_at = remote_updated_at,
                             remote_deleted_at = remote_deleted_at,
-                            raw_json = str(raw_json),
+                            raw_json = raw_json,
                             historical_id = historical_id,
                             local_created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                             local_updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

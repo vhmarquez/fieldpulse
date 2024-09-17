@@ -1,1 +1,1 @@
-from .get_records import *
+from field_pulse_api.get_records import *
