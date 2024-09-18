@@ -62,12 +62,7 @@ def records_to_stg(table_name: str, api_data: json):
             json_records: list = []
             records: object = try_session(session_type='get_all', session_object=Records)
             for record in records:
-                json_records.append({
-                            "local_updated_at": record.local_updated_at.strftime("%Y-%m-%d %H:%M:%S") ,
-                            "remote_updated_at": record.remote_updated_at.strftime("%Y-%m-%d %H:%M:%S") ,
-                            "full_json": json.loads(record.raw_json)
-                        }
-                )
+                json_records.append(json.loads(record.raw_json))
 
             return json_records
 
@@ -87,7 +82,7 @@ def records_to_stg(table_name: str, api_data: json):
                 else:
                     historical_id: int = set_historical_id(data=record, data_key='import_id')
 
-                local_record: object = try_session(session_type='get', session_object=Records, record_id=remote_id)
+                local_record: object = try_session(session_type='get', session_object=Records, record_id=remote_id, composite_key=None)
 
                 if local_record != None:
                     local_updated_at: str = str(local_record.remote_updated_at)
@@ -124,7 +119,6 @@ def records_to_stg(table_name: str, api_data: json):
                     session_object=Records,
                     session_list=session_update_list
                 )
-                # print(session_update_list)
 
     return Records
     
@@ -139,7 +133,6 @@ def set_historical_id(data: object, data_key: str, child_key: str = ''):
     if data_key in data:
         if child_key:
             print(data[data_key]['import_id'])
-            # return data[data_key][child_key]
         else:
             return data[data_key]
     else: 

@@ -69,26 +69,25 @@ class Customer(Base):
 
         session_update_list: list = []
         for record in records:
-            record = json.loads(json.dumps(record['full_json']))
 
-            customer_id: int = record["id"]
+            customer_id: int = record["import_id"]
             name: str = f'{record["first_name"]} {record["middle_name"]} {record["last_name"]}' if record["middle_name"] else f'{record["first_name"]} {record["last_name"]}'
             company_name: str = record["company_name"]
             street_address: str = f'{record["address_1"]} {record["address_2"]}' if record["address_2"] else f'{record["address_1"]}'
             city: str = record["city"]
             state: str = record["state"]
             zip: str = record["zip_code"]
-            # customer_type_id: int = record[customer_type_id]
+            customer_type_id: int = None
             phone: str = record["phone"]
             phone_2: str = record["alt_phone"]
             fax: str = record["fax"]
             email: str = record["email"]
             notes: str = record["notes"]
-            # is_active: bool = record[is_active]
+            is_active: bool = None
             created_ts: datetime = date_normalization(data=record, data_key='created_at')
-            # custom_properties: str = record[custom_properties]
+            custom_properties: str = None
             phone_sms_enabled: bool = record["is_phone_notification_subscribed"]
-            # phone_2_sms_enabled: bool = record[phone_2_sms_enabled]
+            phone_2_sms_enabled: bool = None
 
             record_object: object = Customer(
                 customer_id = customer_id,

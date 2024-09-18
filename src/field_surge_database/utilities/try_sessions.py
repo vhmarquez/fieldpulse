@@ -13,18 +13,22 @@ def try_session(session_type: str, session_object: object, **kwargs):
     :param (string) session_type: Accepts, 'get', 'get_all ,'add', 'execute', or 'delete'
     :param (object) session_object: The object to pass to the session
     :param (string) record_id: **kwargs, the record id that you're trying to fetch, used with session type 'get'
+    :param (string) composite_key: **kwargs, the composite record id for the record you're trying to fetch
     :param (string) session_list: **kwargs, the list of records that you're trying to update, used with session type 'execute'
     """
     with Session() as session:
         try:
             if session_type == 'get':
-                retrieved_record = session.get(session_object, kwargs['record_id'])
+                if kwargs['composite_key'] != None:
+                    retrieved_record = session.get(session_object, (kwargs['record_id'], kwargs['composite_key']))
+                else:
+                    retrieved_record = session.get(session_object, kwargs['record_id'])
                 
                 if retrieved_record != None:
                     return retrieved_record
                 else:
                     return None
-            
+                
             elif session_type == 'get_all':
                 retrieved_records = session.query(session_object).all()
 
