@@ -56,28 +56,43 @@ def records_to_stg(table_name: str, api_data: json):
 
             return try_session(session_type='get_all', session_object=Records)
 
+        def get_all_records_json() -> list:
+            Base.metadata.create_all(db)
+
+            json_records: list = []
+            records: object = try_session(session_type='get_all', session_object=Records)
+            for record in records:
+                json_records.append({
+                            "local_updated_at": record.local_updated_at.strftime("%Y-%m-%d %H:%M:%S") ,
+                            "remote_updated_at": record.remote_updated_at.strftime("%Y-%m-%d %H:%M:%S") ,
+                            "full_json": json.loads(record.raw_json)
+                        }
+                )
+
+            return json_records
 
         def upsert(data: json = api_data) -> None:
             Base.metadata.create_all(db)
 
-            session_update_list = []
+            session_update_list: list = []
 
-            for data in data:
-                remote_id: int = data['id']
-                remote_created_at: datetime = date_normalization(data=data, data_key='created_at')
-                remote_updated_at: datetime = date_normalization(data=data, data_key='updated_at')
-                remote_deleted_at: datetime = date_normalization(data=data, data_key='deleted_at')
-                raw_json: json = json.dumps(data)
+            for record in data:
+                remote_id: int = record['id']
+                remote_created_at: datetime = date_normalization(data=record, data_key='created_at')
+                remote_updated_at: datetime = date_normalization(data=record, data_key='updated_at')
+                remote_deleted_at: datetime = date_normalization(data=record, data_key='deleted_at')
+                raw_json: json = json.dumps(record)
                 if table_name == 'payments':
-                    historical_id: int = set_historical_id(data=data, data_key='invoice', child_key='import_id')
+                    historical_id: int = set_historical_id(data=record, data_key='invoice', child_key='import_id')
                 else:
-                    historical_id: int = set_historical_id(data=data, data_key='import_id')
+                    historical_id: int = set_historical_id(data=record, data_key='import_id')
+
                 local_record: object = try_session(session_type='get', session_object=Records, record_id=remote_id)
 
                 if local_record != None:
                     local_updated_at: str = str(local_record.remote_updated_at)
 
-                    if local_updated_at != remote_updated_at:
+                    if local_updated_at < remote_updated_at:
                         session_update_list.append({
                             "remote_id": remote_id, 
                             "remote_created_at": remote_created_at, 
@@ -103,25 +118,28 @@ def records_to_stg(table_name: str, api_data: json):
                         )
                     )
 
-            try_session(
-                session_type='execute',
-                session_object=Records,
-                session_list=session_update_list
-            )
+            if session_update_list != []:
+                try_session(
+                    session_type='execute',
+                    session_object=Records,
+                    session_list=session_update_list
+                )
+                # print(session_update_list)
 
     return Records
     
-def set_historical_id(data: object, data_key: str, **kwargs):
+def set_historical_id(data: object, data_key: str, child_key: str = ''):
     """
     Checks if the data object has a data key, in which case, returns that data key, otherwise returns None
 
     :param (object) data: The data object which you're iterating through
     :param (string) data_key: The key of the data object which you're trying to return
-    :param (string) child_key: **kwargs The child key of the data_key
+    :param (string) [Optional] child_key: The child key of the data_key
     """
-    if data_key in data: 
-        if kwargs['child_key']:
-            return data[data_key][kwargs['child_key']]
+    if data_key in data:
+        if child_key:
+            print(data[data_key]['import_id'])
+            # return data[data_key][child_key]
         else:
             return data[data_key]
     else: 

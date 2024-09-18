@@ -8,7 +8,6 @@ from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 from field_surge_database.connect import FieldSurgeDatabase
 from field_surge_database.utilities.try_sessions import try_session
 from field_surge_database.utilities.date_normalization import date_normalization
-from field_surge_database.fp_stg_records import records_to_stg as staging_records
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()
@@ -56,12 +55,21 @@ class Customer(Base):
         phone_sms_enabled={self.phone_sms_enabled}
         phone_2_sms_enabled={self.phone_2_sms_enabled}
         )"""
+    
+    def delete(self):
+        Base.metadata.create_all(db)
+
+        try_session(
+            session_type='delete',
+            session_object=Customer
+        )
 
     def record_json(self, records: list):
-        records: list = records
+        Base.metadata.create_all(db)
 
+        session_update_list: list = []
         for record in records:
-            record = json.loads(record.raw_json)
+            record = json.loads(json.dumps(record['full_json']))
 
             customer_id: int = record["id"]
             name: str = f'{record["first_name"]} {record["middle_name"]} {record["last_name"]}' if record["middle_name"] else f'{record["first_name"]} {record["last_name"]}'
@@ -83,24 +91,55 @@ class Customer(Base):
             # phone_2_sms_enabled: bool = record[phone_2_sms_enabled]
 
             record_object: object = Customer(
-                        customer_id = customer_id,
-                        name = name,
-                        company_name = company_name,
-                        street_address = street_address,
-                        city = city,
-                        state = state,
-                        zip = zip,
-                        customer_type_id = None,
-                        phone = phone,
-                        phone_2 = phone_2,
-                        fax = fax,
-                        email = email,
-                        notes = notes,
-                        is_active = None,
-                        created_ts = created_ts,
-                        custom_properties = None,
-                        phone_sms_enabled = phone_sms_enabled,
-                        phone_2_sms_enabled = None
-                    )
+                customer_id = customer_id,
+                name = name,
+                company_name = company_name,
+                street_address = street_address,
+                city = city,
+                state = state,
+                zip = zip,
+                customer_type_id = None,
+                phone = phone,
+                phone_2 = phone_2,
+                fax = fax,
+                email = email,
+                notes = notes,
+                is_active = None,
+                created_ts = created_ts,
+                custom_properties = None,
+                phone_sms_enabled = phone_sms_enabled,
+                phone_2_sms_enabled = None
+            )
 
-            try_session(session_type='add', session_object=record_object)
+            check_local_record = try_session(session_type='get', session_object=Customer, record_id=customer_id)
+            if check_local_record:
+                session_update_list.append({
+                    "customer_id": customer_id,
+                    "name": name,
+                    "company_name": company_name,
+                    "street_address": street_address,
+                    "city": city,
+                    "state": state,
+                    "zip": zip,
+                    "customer_type_id": None,
+                    "phone": phone,
+                    "phone_2": phone_2,
+                    "fax": fax,
+                    "email": email,
+                    "notes": notes,
+                    "is_active": None,
+                    "created_ts": created_ts,
+                    "custom_properties": None,
+                    "phone_sms_enabled": phone_sms_enabled,
+                    "phone_2_sms_enabled": None
+                })
+            else:
+                try_session(session_type='add', session_object=record_object)
+
+        if session_update_list != []:
+            # print(session_update_list)
+            try_session(
+                session_type='execute', 
+                session_object=Customer, 
+                session_list=session_update_list
+            )

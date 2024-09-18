@@ -28,6 +28,6 @@ def upsert(record_type: str, limit: int, max_pages: int) -> None:
     ).upsert()
 
 def delete(record_type: str) -> None:
-    table_name: str = record_type.replace('-', '_')
+    record_type: str = record_type.replace('-', '_')
 
-    db_records.records_to_stg(table_name=table_name, api_data=None).delete()
+    db_records.records_to_stg(table_name=record_type, api_data=None).delete()

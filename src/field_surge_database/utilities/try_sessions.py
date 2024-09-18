@@ -25,7 +25,7 @@ def try_session(session_type: str, session_object: object, **kwargs):
                 else:
                     return None
             
-            if session_type == 'get_all':
+            elif session_type == 'get_all':
                 retrieved_records = session.query(session_object).all()
 
                 if retrieved_records != None:
@@ -33,13 +33,12 @@ def try_session(session_type: str, session_object: object, **kwargs):
                 else:
                     return None
             
-            if session_type == 'add':
+            elif session_type == 'add':
                 session.add(session_object)
                 session.commit()
-                record_id: str = str(session_object.remote_id)
-                print(f'Record: {record_id} created')
+                print(f'Record: created')
 
-            if session_type == 'execute':
+            elif session_type == 'execute':
                 session.execute(
                     update(session_object), 
                     kwargs['session_list']
@@ -47,19 +46,19 @@ def try_session(session_type: str, session_object: object, **kwargs):
                 session.commit()
                 
                 for list_item in kwargs['session_list']:
-                    list_item_id: str = str(list_item['id'])
-                    print(f'Record: {list_item_id} was updated')
+                    print(f'Record: was updated')
 
-            if session_type == 'delete':
+            elif session_type == 'delete':
                 session.query(session_object).delete()
                 session.commit()
                 table_name: str = str(session_object().__tablename__)
                 print(f'Table: {table_name} deleted')
 
-        except Exception:
+        except Exception as e:
             session.rollback()
             print(f'{session_type} session, failed.')
-            print(session_object, kwargs)
+            # print(session_object, kwargs)
+            print(e)
 
         finally:
             session.close()
