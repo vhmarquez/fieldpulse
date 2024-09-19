@@ -58,7 +58,7 @@ class Invoice(Base):
             session_object=Invoice
         )
 
-    def record_json(self, records: list):
+    def upsert(self, records: list):
         Base.metadata.create_all(db)
 
         session_update_list: list = []

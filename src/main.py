@@ -1,5 +1,5 @@
 from field_surge_database import fp_to_db
-from field_surge_database.fact_tables import to_stg_fact
+from field_surge_database.fact_tables import stg_fact
 
 def main():
 
@@ -36,23 +36,23 @@ def main():
     # ================================================
     
     # Delete data from _stg_fact tables
-    # to_stg_fact.delete(record_type='customers')
-    # to_stg_fact.delete(record_type='invoices')
-    # # to_stg_fact.delete(record_type='jobs')
-    # to_stg_fact.delete(record_type='payments')
-    # to_stg_fact.delete(record_type='purchase-orders')
-    # to_stg_fact.delete(record_type='vendors')
+    # stg_fact.delete(record_type='customers')
+    # stg_fact.delete(record_type='invoices')
+    # stg_fact.delete(record_type='jobs')
+    # stg_fact.delete(record_type='payments')
+    # stg_fact.delete(record_type='purchase-orders')
+    # stg_fact.delete(record_type='vendors')
 
     # Create Fact Tables
     # ================================================
 
     # Create Staging for Fact tables
-    # to_stg_fact.upsert(record_type='customers')
-    # to_stg_fact.upsert(record_type='invoices')
-    # to_stg_fact.upsert(record_type='jobs')
-    # to_stg_fact.upsert(record_type='payments')
-    # to_stg_fact.upsert(record_type='purchase-orders')
-    to_stg_fact.upsert(record_type='vendors')
+    # stg_fact.upsert(record_type='customers')
+    # stg_fact.upsert(record_type='invoices')
+    # stg_fact.upsert(record_type='jobs')
+    # stg_fact.upsert(record_type='payments')
+    # stg_fact.upsert(record_type='purchase-orders')
+    stg_fact.upsert(record_type='vendors')
 
 if __name__ == '__main__':
     main()

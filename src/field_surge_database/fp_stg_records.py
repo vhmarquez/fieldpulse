@@ -51,11 +51,6 @@ def records_to_stg(table_name: str, api_data: json):
                 session_object=Records
             )
 
-        def get_all_records() -> object:
-            Base.metadata.create_all(db)
-
-            return try_session(session_type='get_all', session_object=Records)
-
         def get_all_records_json() -> list:
             Base.metadata.create_all(db)
 

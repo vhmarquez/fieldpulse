@@ -62,7 +62,7 @@ class PurchaseOrder(Base):
             session_object=PurchaseOrder
         )
 
-    def record_json(self, records: list):
+    def upsert(self, records: list):
         Base.metadata.create_all(db)
 
         session_update_list: list = []
