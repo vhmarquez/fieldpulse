@@ -110,7 +110,7 @@ class Customer(Base):
                 phone_2_sms_enabled = None
             )
 
-            check_local_record = try_session(session_type='get', session_object=Customer, record_id=customer_id)
+            check_local_record = try_session(session_type='get', session_object=Customer, record_id=customer_id, composite_key=None)
             if check_local_record:
                 session_update_list.append({
                     "customer_id": customer_id,
@@ -120,23 +120,22 @@ class Customer(Base):
                     "city": city,
                     "state": state,
                     "zip": zip,
-                    "customer_type_id": None,
+                    "customer_type_id": customer_type_id,
                     "phone": phone,
                     "phone_2": phone_2,
                     "fax": fax,
                     "email": email,
                     "notes": notes,
-                    "is_active": None,
+                    "is_active": is_active,
                     "created_ts": created_ts,
-                    "custom_properties": None,
+                    "custom_properties": custom_properties,
                     "phone_sms_enabled": phone_sms_enabled,
-                    "phone_2_sms_enabled": None
+                    "phone_2_sms_enabled": phone_2_sms_enabled
                 })
             else:
                 try_session(session_type='add', session_object=record_object)
 
         if session_update_list != []:
-            # print(session_update_list)
             try_session(
                 session_type='execute', 
                 session_object=Customer, 

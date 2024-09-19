@@ -38,13 +38,21 @@ def main():
     # Delete data from _stg_fact tables
     # to_stg_fact.delete(record_type='customers')
     # to_stg_fact.delete(record_type='invoices')
+    # # to_stg_fact.delete(record_type='jobs')
+    # to_stg_fact.delete(record_type='payments')
+    # to_stg_fact.delete(record_type='purchase-orders')
+    # to_stg_fact.delete(record_type='vendors')
 
     # Create Fact Tables
     # ================================================
 
     # Create Staging for Fact tables
     # to_stg_fact.upsert(record_type='customers')
-    to_stg_fact.upsert(record_type='invoices')
+    # to_stg_fact.upsert(record_type='invoices')
+    # to_stg_fact.upsert(record_type='jobs')
+    to_stg_fact.upsert(record_type='payments')
+    # to_stg_fact.upsert(record_type='purchase-orders')
+    # to_stg_fact.upsert(record_type='vendors')
 
 if __name__ == '__main__':
     main()

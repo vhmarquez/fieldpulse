@@ -64,7 +64,7 @@ class Invoice(Base):
         session_update_list: list = []
         for record in records:
 
-            invoice_id: int = record['id']
+            invoice_id: int = record['import_id']
             job_id: int = record['job_id']
             customer_id: int = record['customer']['import_id']
             invoice_created_ts: datetime = record['created_at']
