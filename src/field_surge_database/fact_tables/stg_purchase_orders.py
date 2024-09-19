@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Integer, Boolean, DECIMAL
+from sqlalchemy import DateTime, String, Integer, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from field_surge_database.connect import FieldSurgeDatabase
@@ -70,8 +70,8 @@ class PurchaseOrder(Base):
 
             purchase_order_id: int = record['id']
             vendor_id: int = record['vendor_id']
-            po_created_ts: datetime = record['created_at']
-            purchase_order_ts: datetime = record['created_at'] #duplicate?
+            po_created_ts: datetime = date_normalization(data=record, data_key='created_at')
+            purchase_order_ts: datetime = date_normalization(data=record, data_key='created_at') #duplicate?
             requested_employee_id: int = None
             approved_employee_id: int = None
             purchase_order_status_type_id = None

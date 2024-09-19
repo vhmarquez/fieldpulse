@@ -50,9 +50,9 @@ def main():
     # to_stg_fact.upsert(record_type='customers')
     # to_stg_fact.upsert(record_type='invoices')
     # to_stg_fact.upsert(record_type='jobs')
-    to_stg_fact.upsert(record_type='payments')
+    # to_stg_fact.upsert(record_type='payments')
     # to_stg_fact.upsert(record_type='purchase-orders')
-    # to_stg_fact.upsert(record_type='vendors')
+    to_stg_fact.upsert(record_type='vendors')
 
 if __name__ == '__main__':
     main()

@@ -67,8 +67,8 @@ class Invoice(Base):
             invoice_id: int = record['import_id']
             job_id: int = record['job_id']
             customer_id: int = record['customer']['import_id']
-            invoice_created_ts: datetime = record['created_at']
-            invoice_date_ts: datetime = record['invoiced_date']
+            invoice_created_ts: datetime = date_normalization(data=record, data_key='created_at')
+            invoice_date_ts: datetime = date_normalization(data=record, data_key='invoiced_date')
             notes: str = record['notes']
             reference: str = record['reference']
 
@@ -76,7 +76,7 @@ class Invoice(Base):
                 invoice_item_id: int = line_item['id']
                 quantity: float = line_item['line_quantity']
                 unit_price: float = line_item['line_components'][0]['unit_price']
-                invoice_item_created_ts: datetime = line_item['created_at']
+                invoice_item_created_ts: datetime = date_normalization(data=line_item, data_key='created_at')
                 invoice_item_notes: str = line_item['line_description']
 
                 # Fields not in FieldPulse

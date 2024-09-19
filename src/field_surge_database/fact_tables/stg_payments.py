@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Integer, Boolean, DECIMAL
+from sqlalchemy import DateTime, String, Integer, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from field_surge_database.connect import FieldSurgeDatabase
@@ -72,8 +72,8 @@ class Payment(Base):
             customer_id: int = record['customer_id']
             payment_type_id: int = None
             amount: float = record['amount']
-            payment_created_ts: datetime = record['created_at']
-            payment_ts: datetime = record['payment_date']
+            payment_created_ts: datetime = date_normalization(data=record, data_key='created_at')
+            payment_ts: datetime = date_normalization(data=record, data_key='payment_date')
             payment_notes: str = record['notes']
             reference: str = None
             confirmation: str = None
@@ -85,7 +85,7 @@ class Payment(Base):
 
             for line_item in record['invoice']['line_items']:
                 payment_item_notes: str = line_item['line_description']
-                payment_item_created_ts: datetime = line_item['created_at']
+                payment_item_created_ts: datetime = date_normalization(data=line_item, data_key='created_at')
                 payment_item_id: int = line_item['id']
 
                 record_object: object = Payment(

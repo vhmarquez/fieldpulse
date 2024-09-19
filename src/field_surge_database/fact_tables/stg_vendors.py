@@ -79,7 +79,7 @@ class Vendor(Base):
             email: str = record['email']
             notes: str = None
             is_active: bool = None
-            vendor_created_ts: datetime = parser.parse(record['created_at'])
+            vendor_created_ts: datetime = date_normalization(data=record, data_key='created_at')
 
             record_object: object = Vendor(
                 vendor_id = vendor_id,

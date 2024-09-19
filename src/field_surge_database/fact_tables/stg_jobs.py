@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Integer, Boolean, DECIMAL
+from sqlalchemy import DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from field_surge_database.connect import FieldSurgeDatabase
@@ -62,10 +62,10 @@ class Job(Base):
             trade_type_id: int = None
             job_source_type_id: int = None
             job_status_type_id: int = record['status_id']
-            job_created_ts: datetime = record['created_at']
+            job_created_ts: datetime = date_normalization(data=record, data_key='created_at')
             job_received_ts: datetime = None
-            job_scheduled_start_ts: datetime = record['start_time']
-            job_scheduled_end_ts: datetime = record['end_time']
+            job_scheduled_start_ts: datetime = date_normalization(data=record, data_key='start_time')
+            job_scheduled_end_ts: datetime = date_normalization(data=record, data_key='end_time')
             job_original_scheduled_start_ts: datetime = None
 
             record_object: object = Job(
