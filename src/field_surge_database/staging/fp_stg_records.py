@@ -11,7 +11,7 @@ from field_surge_database.utilities import try_session, date_normalization
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()
 
-def records_to_stg(table_name: str, api_data: json):
+def fp_stg(table_name: str, api_data: json):
     """
     Query's FieldPulse API and returns a JSON file
 

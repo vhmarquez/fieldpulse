@@ -1,7 +1,7 @@
 import json
 
 import field_pulse_api.get_records as api_records
-import field_surge_database.fp_stg_records as db_records
+import field_surge_database.staging.fp_stg_records as db_records
 
 def upsert(record_type: str, limit: int, max_pages: int) -> None:
     """
@@ -22,7 +22,7 @@ def upsert(record_type: str, limit: int, max_pages: int) -> None:
         print=False
     )
 
-    db_records.records_to_stg(
+    db_records.fp_stg(
         table_name=table_name,
         api_data=record_data
     ).upsert()
@@ -30,4 +30,4 @@ def upsert(record_type: str, limit: int, max_pages: int) -> None:
 def delete(record_type: str) -> None:
     record_type: str = record_type.replace('-', '_')
 
-    db_records.records_to_stg(table_name=record_type, api_data=None).delete()
+    db_records.fp_stg(table_name=record_type, api_data=None).delete()

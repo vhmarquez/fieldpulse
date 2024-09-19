@@ -4,7 +4,7 @@ from field_surge_database.fact_tables.stg_fact_jobs import Job
 from field_surge_database.fact_tables.stg_fact_payments import Payment
 from field_surge_database.fact_tables.stg_fact_purchase_orders import PurchaseOrder
 from field_surge_database.fact_tables.stg_fact_vendors import Vendor
-from field_surge_database.fp_stg_records import records_to_stg as staging_records
+from field_surge_database.staging.fp_stg_records import records_to_stg as staging_records
 
 def upsert(record_type: str):
     record_type: str = record_type.replace('-', '_')
