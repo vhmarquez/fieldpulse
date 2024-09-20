@@ -1,4 +1,4 @@
-from field_surge_database.upsert import db
+from field_sure_database.upsert import db
 
 def main():
 

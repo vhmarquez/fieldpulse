@@ -1,12 +1,12 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from typing import Optional
 
 from sqlalchemy import DateTime, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
-from field_surge_database.connect import FieldSurgeDatabase
-from field_surge_database.utilities import try_session, date_normalization
+from field_sure_database.connect import FieldSurgeDatabase
+from field_sure_database.utilities import try_session, date_normalization
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()
