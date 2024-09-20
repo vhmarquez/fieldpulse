@@ -41,6 +41,7 @@ def db(record_type: str, limit: int, max_pages: int, sort_by: str, sort_dir: str
         # FP Staging Table
         table.delete()
 
+    if delete_fact == True:
         # Fact Tables
         match record_type:
             case 'customers':
