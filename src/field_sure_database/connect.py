@@ -25,7 +25,7 @@ class FieldSurgeDatabase():
 
     def __init__(self):
 
-        self.connection_string = f'driver={mssql_driver};server={mssql_server_name};port={mssql_server_port};database={mssql_database_name};uid={mssql_user};pwd={mssql_pw};TrustServerCertificate=yes'
+        self.connection_string = f'driver={mssql_driver.value};server={mssql_server_name.value};port={mssql_server_port.value};database={mssql_database_name.value};uid={mssql_user.value};pwd={mssql_pw.value};TrustServerCertificate=yes'
         self.connection_url = sa.URL.create('mssql+pyodbc', query={'odbc_connect': self.connection_string})
 
     def connect(self):

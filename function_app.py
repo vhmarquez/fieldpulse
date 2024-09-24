@@ -13,6 +13,5 @@ def timer_trigger(myTimer: func.TimerRequest) -> None:
         logging.info('The timer is past due!')
 
     main.main()
-    # print('timer function ran: {datetime.now()}')
 
     logging.info('Python timer trigger function executed.')

@@ -21,6 +21,7 @@ def fp_stg(table_name: str, api_data: json):
 
     class Records(Base):
         __tablename__ = f'_fp_stg_{table_name}'
+        __table_args__ = {'extend_existing': True}
 
         remote_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=False)
         remote_created_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
@@ -132,6 +133,3 @@ def set_historical_id(data: object, data_key: str, child_key: str = ''):
             return data[data_key]
     else: 
         return None
-                
-if __name__ == '__main__':
-    records_to_stg(tablename='customers')

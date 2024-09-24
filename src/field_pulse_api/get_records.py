@@ -11,14 +11,14 @@ fp_api_key = client.get_secret('FIELD-PULSE-API-KEY')
 fp_base_url = client.get_secret('FIELD-PULSE-BASE-URL')
 fp_base_path = client.get_secret('FIELD-PULSE-BASE-PATH')
 
-FIELD_PULSE_FULL_PATH = f'{fp_base_url}{fp_base_path}'
+FIELD_PULSE_FULL_PATH = f'{fp_base_url.value}{fp_base_path.value}'
 
 class GetRecords():
 
     def __init__(self) -> json:
 
         self.headers = {
-            'x-api-key': fp_api_key,
+            'x-api-key': fp_api_key.value,
             'Accept': 'application/json'
         }
 
