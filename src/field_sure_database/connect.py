@@ -1,17 +1,21 @@
 from dotenv import dotenv_values
 import sqlalchemy as sa
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
+
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url='https://fieldpulsekeyvault.vault.azure.net/', credential=credential)
 
 # ===================================
 # Load Environment Variables
 # ===================================
 
-config = dotenv_values(".env")
-mssql_user = config['MSSQL_USER']
-mssql_pw = config['MSSQL_PW']
-mssql_server_name = config['MSSQL_SERVER_NAME']
-mssql_server_port = config['MSSQL_SERVER_PORT']
-mssql_database_name = config['MSSQL_DATABASE_NAME']
-mssql_driver = config['MSSQL_DRIVER']
+mssql_user = client.get('SERVER-USERNAME')
+mssql_pw = client.get('SERVER-PW')
+mssql_server_name = client.get('SERVER-NAME')
+mssql_server_port = client.get('SERVER-PORT')
+mssql_database_name = client.get('DATABASE-NAME')
+mssql_driver = client.get('SERVER-DRIVER')
 
 # ===================================
 # Establish Database Class

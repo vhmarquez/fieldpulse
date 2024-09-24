@@ -1,17 +1,24 @@
 import json
 import requests
-from dotenv import dotenv_values
 
-config = dotenv_values(".env")
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
 
-FIELD_PULSE_FULL_PATH = config['FIELD_PULSE_BASE_URL'] + config['FIELD_PULSE_BASE_PATH']
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url='https://fieldpulsekeyvault.vault.azure.net/', credential=credential)
+
+fp_api_key = client.get('FIELD-PULSE-API-KEY')
+fp_base_url = client.get('FIELD-PULSE-BASE-URL')
+fp_base_path = client.get('FIELD-PULSE-BASE-PATH')
+
+FIELD_PULSE_FULL_PATH = fp_base_url + fp_base_path
 
 class GetRecords():
 
     def __init__(self) -> json:
 
         self.headers = {
-            'x-api-key': config['FIELD_PULSE_API_KEY'],
+            'x-api-key': fp_api_key,
             'Accept': 'application/json'
         }
 
