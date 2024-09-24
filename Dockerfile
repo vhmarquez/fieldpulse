@@ -30,6 +30,12 @@ RUN apt-get install -y unixodbc-dev
 # optional: kerberos library for debian-slim distributions
 RUN apt-get install -y libgssapi-krb5-2
 
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+RUN mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/debian/bookworm/dev/null | cut -d'.' -f 1)/prod bookworm/dev/null) main" > /etc/apt/sources.list.d/dotnetdev.list'
+# RUN apt-get update
+RUN apt-get install azure-functions-core-tools-4
+
 EXPOSE 1433
 
 COPY ./src ./src

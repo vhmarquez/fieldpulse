@@ -10,12 +10,12 @@ client = SecretClient(vault_url='https://fieldpulsekeyvault.vault.azure.net/', c
 # Load Environment Variables
 # ===================================
 
-mssql_user = client.get('SERVER-USERNAME')
-mssql_pw = client.get('SERVER-PW')
-mssql_server_name = client.get('SERVER-NAME')
-mssql_server_port = client.get('SERVER-PORT')
-mssql_database_name = client.get('DATABASE-NAME')
-mssql_driver = client.get('SERVER-DRIVER')
+mssql_user = client.get_secret('SERVER-USERNAME')
+mssql_pw = client.get_secret('SERVER-PW')
+mssql_server_name = client.get_secret('SERVER-NAME')
+mssql_server_port = client.get_secret('SERVER-PORT')
+mssql_database_name = client.get_secret('DATABASE-NAME')
+mssql_driver = client.get_secret('SERVER-DRIVER')
 
 # ===================================
 # Establish Database Class

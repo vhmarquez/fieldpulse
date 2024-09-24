@@ -1,7 +1,7 @@
 from sqlalchemy import update
 from sqlalchemy.orm import sessionmaker
 
-from field_sure_database.connect import FieldSurgeDatabase
+from src.field_sure_database.connect import FieldSurgeDatabase
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Session = sessionmaker(bind=db)

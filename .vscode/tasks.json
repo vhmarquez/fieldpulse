@@ -3,9 +3,15 @@
   "tasks": [
     {
       "type": "func",
-      "label": "func: host start",
+      "command": "extensions install",
+      "problemMatcher": [],
+      "label": "func: extensions install"
+    },
+    {
+      "type": "func",
       "command": "host start",
       "problemMatcher": "$func-python-watch",
+      "label": "func: host start",
       "isBackground": true,
       "dependsOn": "pip install (functions)"
     },
@@ -19,9 +25,15 @@
         "command": "${config:azureFunctions.pythonVenv}/Scripts/python -m pip install -r requirements.txt"
       },
       "linux": {
-        "command": "${config:azureFunctions.pythonVenv}/bin/python -m pip install -r requirements.txt"
+        "command": "${config:azureFunctions.pythonVenv}/bin/python3 -m pip install -r requirements.txt"
       },
       "problemMatcher": []
+    },
+    {
+      "type": "func",
+      "command": "pack",
+      "problemMatcher": [],
+      "label": "func: pack"
     }
   ]
 }

@@ -4,9 +4,9 @@ from typing import Optional
 from sqlalchemy import DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
-from field_sure_database.connect import FieldSurgeDatabase
-from field_sure_database.utilities.try_sessions import try_session
-from field_sure_database.utilities.date_normalization import date_normalization
+from src.field_sure_database.connect import FieldSurgeDatabase
+from src.field_sure_database.utilities.try_sessions import try_session
+from src.field_sure_database.utilities.date_normalization import date_normalization
 
 db = FieldSurgeDatabase().connect().execution_options(isolation_level='AUTOCOMMIT')
 Base = declarative_base()

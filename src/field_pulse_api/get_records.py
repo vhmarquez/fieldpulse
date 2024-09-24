@@ -7,11 +7,11 @@ from azure.identity import DefaultAzureCredential
 credential = DefaultAzureCredential()
 client = SecretClient(vault_url='https://fieldpulsekeyvault.vault.azure.net/', credential=credential)
 
-fp_api_key = client.get('FIELD-PULSE-API-KEY')
-fp_base_url = client.get('FIELD-PULSE-BASE-URL')
-fp_base_path = client.get('FIELD-PULSE-BASE-PATH')
+fp_api_key = client.get_secret('FIELD-PULSE-API-KEY')
+fp_base_url = client.get_secret('FIELD-PULSE-BASE-URL')
+fp_base_path = client.get_secret('FIELD-PULSE-BASE-PATH')
 
-FIELD_PULSE_FULL_PATH = fp_base_url + fp_base_path
+FIELD_PULSE_FULL_PATH = f'{fp_base_url}{fp_base_path}'
 
 class GetRecords():
 

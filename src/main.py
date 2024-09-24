@@ -1,4 +1,4 @@
-from field_sure_database.upsert import db
+from src.field_sure_database.upsert import db
 
 def main():
 
